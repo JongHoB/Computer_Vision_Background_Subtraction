@@ -10,7 +10,7 @@ from collections import deque
 def main():
 
 		##### Set threshold
-		threshold = 25
+		threshold = 30
 
 		##### Set path
 		input_path = './input_image'    # input path
