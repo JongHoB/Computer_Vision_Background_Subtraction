@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 import os
 import evaluation as eval
-
+from collections import deque
 ###############################################################
 ##### This code has been tested in Python 3.6 environment #####
 ###############################################################
@@ -26,12 +26,18 @@ def main():
 		frame_prev_gray = frame_current_gray
 
 		##### Set learning rate of the background
-		alpha=0.8
+		alpha=0.6
 		# small alpha 1 to 0.0001
-		background_model_prev=frame_prev_gray
+		
+		###deque for previous images
+		deq=deque(maxlen=50)
+		deq.append(frame_current_gray)
 
 		##### background substraction
 		for image_idx in range(len(input)):
+
+			### Median of previous images
+			background_model_prev=np.median(deq,axis=0).astype(np.uint8)
 
 			##### Adaptive B/F Detection
 			background_model_current=(1-alpha)*background_model_prev+alpha*frame_prev_gray
@@ -66,6 +72,7 @@ def main():
 			##### read next frame
 			frame_current = cv.imread(os.path.join(input_path, input[image_idx + 1]))
 			frame_current_gray = cv.cvtColor(frame_current, cv.COLOR_BGR2GRAY).astype(np.float64)
+			deq.append(frame_current_gray)
 
 			##### If you want to stop, press ESC key
 			k = cv.waitKey(30) & 0xff
