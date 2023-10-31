@@ -10,7 +10,7 @@ from collections import deque
 def main():
 
 		##### Set threshold
-		threshold = 20
+		threshold = 25
 
 		##### Set path
 		input_path = './input_image'    # input path
@@ -26,18 +26,18 @@ def main():
 		frame_prev_gray = frame_current_gray
 
 		##### Set learning rate of the background
-		alpha=0.6
+		alpha=0.75
 		# small alpha 1 to 0.0001
 		
 		###deque for previous images
-		deq=deque(maxlen=50)
+		deq=deque(maxlen=70)
 		deq.append(frame_current_gray)
 
 		##### background substraction
 		for image_idx in range(len(input)):
 
 			### Median of previous images
-			background_model_prev=np.median(deq,axis=0).astype(np.uint8)
+			background_model_prev=np.median(deq,axis=0).astype(np.float64)
 
 			##### Adaptive B/F Detection
 			background_model_current=(1-alpha)*background_model_prev+alpha*frame_prev_gray
@@ -49,6 +49,8 @@ def main():
 			##### make mask by applying threshold
 			frame_diff = np.where(diff_abs > threshold, 1.0, 0.0)
 
+
+
 			##### apply mask to current frame
 			current_gray_masked = np.multiply(frame_current_gray, frame_diff)
 			current_gray_masked_mk2 = np.where(current_gray_masked > 0, 255.0, 0.0)
@@ -58,8 +60,7 @@ def main():
 			#cv.imshow('result', result) # colab does not support cv.imshow
 
 			##### renew background
-			frame_prev_gray = frame_current_gray
-			background_model_prev=background_model_current
+			frame_prev_gray = frame_current_gray	
 
 			##### make result file
 			##### Please don't modify path
