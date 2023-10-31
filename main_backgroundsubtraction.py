@@ -33,6 +33,9 @@ def main():
 		deq=deque(maxlen=70)
 		deq.append(frame_current_gray)
 
+		##Close kernel
+		close_kernel=np.ones((11,11),np.uint8)
+
 		##### background substraction
 		for image_idx in range(len(input)):
 
@@ -58,6 +61,8 @@ def main():
 			##### final result
 			result = current_gray_masked_mk2.astype(np.uint8)
 			#cv.imshow('result', result) # colab does not support cv.imshow
+
+			result=cv.morphologyEx(result,cv.MORPH_CLOSE,close_kernel,iterations=1)
 
 			##### renew background
 			frame_prev_gray = frame_current_gray	
