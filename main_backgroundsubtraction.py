@@ -10,7 +10,7 @@ from collections import deque
 def main():
 
         ##### Set threshold
-        threshold = 30
+        threshold = 32
 
         ##### Set path
         input_path = './input_image'    # input path
@@ -34,7 +34,7 @@ def main():
         deq.append(frame_current_gray)
 
         ##Close kernel
-        close_kernel=np.ones((11,11),np.uint8)
+        close_kernel=np.ones((13,13),np.uint8)
 
         ##### background substraction
         for image_idx in range(len(input)):
